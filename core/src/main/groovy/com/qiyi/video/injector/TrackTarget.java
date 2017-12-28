@@ -6,12 +6,14 @@ import java.util.List;
  * Created by linjianjun on 2017/7/24.
  */
 public class TrackTarget {
+    public final String interfaceName;
     public final String className;
     public final String methodName;
     public final String methodDesc;
     public final Inst inst;
 
-    public TrackTarget(String className, String methodName, String methodDesc, Inst inst) {
+    public TrackTarget(String interfaceName, String className, String methodName, String methodDesc, Inst inst) {
+        this.interfaceName = interfaceName;
         this.className = className;
         this.methodName = methodName;
         this.methodDesc = methodDesc;
@@ -45,6 +47,7 @@ public class TrackTarget {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("interfaceName=").append(interfaceName).append(" ");
         sb.append("className=").append(className).append(" ")
                 .append("methodName=").append(methodName).append(" ")
                 .append("methodDesc=").append(methodDesc).append(" ");

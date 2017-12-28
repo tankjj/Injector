@@ -1,6 +1,6 @@
 [
   {
-    "className": "org/icegeneral/injector/sample/MainActivity",
+    "interfaceName": "android/view/View$OnClickListener",
     "methodName": "onClick",
     "methodDesc": "(Landroid/view/View;)V",
     "inst": {

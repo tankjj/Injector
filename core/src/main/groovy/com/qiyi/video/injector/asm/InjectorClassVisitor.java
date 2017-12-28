@@ -8,6 +8,8 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.ArrayList;
+
 /**
  * Created by linjianjun on 2017/5/27.
  */
@@ -40,6 +42,7 @@ public class InjectorClassVisitor extends ClassVisitor {
     boolean isActivityOnPauseHandled;
     boolean isFragmentOnDestroyHandled;
     boolean hasModified;
+    ArrayList<String> interfaces = new ArrayList<>();
 
     static final int TYPE_TRACK = 0;
     static final int TYPE_WATCH = 1;
@@ -60,6 +63,11 @@ public class InjectorClassVisitor extends ClassVisitor {
         superIsFragment = superName.equals(FRAGMENT) || superName.equals(V4FRAGMENT);
         this.superName = superName;
         this.className = name;
+        if (interfaces != null && interfaces.length > 0) {
+            for (String interfaceName : interfaces) {
+                this.interfaces.add(interfaceName);
+            }
+        }
         super.visit(version, access, name, signature, superName, interfaces);
     }
 
@@ -88,10 +96,11 @@ public class InjectorClassVisitor extends ClassVisitor {
                 return new InjectorMethodVisitor(mw, configuration);
             }
         }
-        if (configuration.trackTargets != null) {
+        if (configuration.trackTargets != null && (access & Opcodes.ACC_ABSTRACT) == 0) {
             for (TrackTarget trackTarget : configuration.trackTargets) {
-                if ((trackTarget.className == null || trackTarget.className.trim().equals("") || trackTarget.className.equals(className)) &&
-                        name.equals(trackTarget.methodName) && desc.equals(trackTarget.methodDesc)) {
+                if ((trackTarget.className == null || trackTarget.className.trim().equals("") || trackTarget.className.equals(className))
+                        && name.equals(trackTarget.methodName) && desc.equals(trackTarget.methodDesc)
+                        && (trackTarget.interfaceName == null || this.interfaces.contains(trackTarget.interfaceName))) {
                     injectTrackTarget(mw, trackTarget.inst);
                     hasModified = true;
                     return new InjectorMethodVisitor(mw, configuration);
