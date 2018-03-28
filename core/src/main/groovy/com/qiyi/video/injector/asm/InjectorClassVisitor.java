@@ -31,6 +31,9 @@ public class InjectorClassVisitor extends ClassVisitor {
     public static final String TRACK = "track";
     public static final String TRACK_DESC = "(Ljava/lang/String;)V";
 
+    public static final String PERMISSION_TRACK = "writeLog";
+    public static final String PERMISSION_DESC = "(Ljava/lang/String;)V";
+
     final Configuration configuration;
     final ClassWriter cw;
 
@@ -96,12 +99,18 @@ public class InjectorClassVisitor extends ClassVisitor {
                 return new InjectorMethodVisitor(mw, configuration);
             }
         }
+
         if (configuration.trackTargets != null && (access & Opcodes.ACC_ABSTRACT) == 0) {
             for (TrackTarget trackTarget : configuration.trackTargets) {
                 if ((trackTarget.className == null || trackTarget.className.trim().equals("") || trackTarget.className.equals(className))
                         && name.equals(trackTarget.methodName) && desc.equals(trackTarget.methodDesc)
                         && (trackTarget.interfaceName == null || this.interfaces.contains(trackTarget.interfaceName))) {
-                    injectTrackTarget(mw, trackTarget.inst);
+                    if (trackTarget.type == 0) {
+                        injectTrackTarget(mw, trackTarget.inst);
+                    } else if (trackTarget.type == 1) {
+                        injectPermissionTarget(mw, trackTarget.inst);
+                    }
+                    System.out.println("injector trackTarget " + this.className + "::" + name);
                     hasModified = true;
                     return new InjectorMethodVisitor(mw, configuration);
                 }
@@ -187,4 +196,13 @@ public class InjectorClassVisitor extends ClassVisitor {
         mw.visitMethodInsn(Opcodes.INVOKESTATIC, configuration.trackClass, TRACK, TRACK_DESC, false);
     }
 
+    private void injectPermissionTarget(MethodVisitor mw, TrackTarget.Inst inst) {
+        if (inst.argIndexes != null) {
+            for (int argIndex : inst.argIndexes) {
+                mw.visitVarInsn(Opcodes.ALOAD, argIndex);
+            }
+        }
+        mw.visitMethodInsn(Opcodes.INVOKESTATIC, inst.owner, inst.methodName, inst.methodDesc, false);
+        mw.visitMethodInsn(Opcodes.INVOKESTATIC, configuration.permissionClass, PERMISSION_TRACK, PERMISSION_DESC, false);
+    }
 }

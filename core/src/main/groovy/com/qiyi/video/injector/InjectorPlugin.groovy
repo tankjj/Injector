@@ -35,6 +35,9 @@ public class InjectorPlugin implements Plugin<Project> {
             if (configuration.trackActivity) {
                 configuration.trackClass = configuration.trackClass.replaceAll("\\.", "/")
                 System.out.println("-----injector----- configuration.trackClass=" + configuration.trackClass)
+
+                configuration.permissionClass = configuration.permissionClass.replaceAll("\\.", "/")
+                System.out.println("-----injector----- configuration.permissionClass=" + configuration.permissionClass)
             }
         }
     }

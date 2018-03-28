@@ -15,7 +15,7 @@ public class Util {
             it ->
                 def jsonInst = it.inst
                 TrackTarget.Inst inst = new TrackTarget.Inst(jsonInst.owner, jsonInst.methodName, jsonInst.methodDesc, jsonInst.argIndexes)
-                TrackTarget trackTarget = new TrackTarget(it.interfaceName, it.className, it.methodName, it.methodDesc, inst)
+                TrackTarget trackTarget = new TrackTarget(it.interfaceName, it.className, it.methodName, it.methodDesc, it.type, inst)
                 trackTargets.add(trackTarget)
         }
         return trackTargets

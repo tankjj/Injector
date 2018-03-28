@@ -10,13 +10,18 @@ public class TrackTarget {
     public final String className;
     public final String methodName;
     public final String methodDesc;
+    public final int type;
     public final Inst inst;
 
-    public TrackTarget(String interfaceName, String className, String methodName, String methodDesc, Inst inst) {
+    public TrackTarget(String interfaceName, String className, String methodName, String methodDesc, Integer type, Inst inst) {
         this.interfaceName = interfaceName;
         this.className = className;
         this.methodName = methodName;
         this.methodDesc = methodDesc;
+        if (type == null)
+            this.type = 0;
+        else
+            this.type = type.intValue();
         this.inst = inst;
     }
 
@@ -50,7 +55,8 @@ public class TrackTarget {
         sb.append("interfaceName=").append(interfaceName).append(" ");
         sb.append("className=").append(className).append(" ")
                 .append("methodName=").append(methodName).append(" ")
-                .append("methodDesc=").append(methodDesc).append(" ");
+                .append("methodDesc=").append(methodDesc).append(" ")
+                .append("type=").append(type);
         sb.append("inst={").append(inst).append("}");
         return sb.toString();
     }

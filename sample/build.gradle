@@ -8,7 +8,9 @@ injector {
     trackClass = "org.icegeneral.injector.sample.Tracker"
     trackActivity = true
 
-    trackTargetFile = "C:/Code/Injector/sample/track.json"
+    trackTargetFile = "D:/workspace/qiyi/Injector/sample/track.json"
+
+    permissionClass = "org.icegeneral.injector.sample.PermissionInjector"
 }
 
 android {
@@ -17,7 +19,7 @@ android {
     defaultConfig {
         applicationId "org.icegeneral.injector.sample"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,11 +27,11 @@ android {
     }
     buildTypes {
         debug {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
