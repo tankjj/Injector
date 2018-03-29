@@ -34,6 +34,9 @@ public class InjectorClassVisitor extends ClassVisitor {
     public static final String PERMISSION_TRACK = "writeLog";
     public static final String PERMISSION_DESC = "(Ljava/lang/String;)V";
 
+    //public static final String IDENTIFY_TRACK = "writeLog";
+    //public static final String IDENTIFY_DESC = "(Ljava/lang/String;)V";
+
     final Configuration configuration;
     final ClassWriter cw;
 
@@ -109,6 +112,8 @@ public class InjectorClassVisitor extends ClassVisitor {
                         injectTrackTarget(mw, trackTarget.inst);
                     } else if (trackTarget.type == 1) {
                         injectPermissionTarget(mw, trackTarget.inst);
+                    } else if (trackTarget.type == 2) {
+                        injectTraget(mw, trackTarget.inst);
                     }
                     System.out.println("injector trackTarget " + this.className + "::" + name);
                     hasModified = true;
@@ -204,5 +209,15 @@ public class InjectorClassVisitor extends ClassVisitor {
         }
         mw.visitMethodInsn(Opcodes.INVOKESTATIC, inst.owner, inst.methodName, inst.methodDesc, false);
         mw.visitMethodInsn(Opcodes.INVOKESTATIC, configuration.permissionClass, PERMISSION_TRACK, PERMISSION_DESC, false);
+    }
+
+    private void injectTraget(MethodVisitor mw, TrackTarget.Inst inst) {
+        if (inst.argIndexes != null) {
+            for (int argIndex : inst.argIndexes) {
+                mw.visitVarInsn(Opcodes.ALOAD, argIndex);
+            }
+        }
+        mw.visitMethodInsn(Opcodes.INVOKESTATIC, inst.owner, inst.methodName, inst.methodDesc, false);
+        //mw.visitMethodInsn(Opcodes.INVOKESTATIC, configuration.identifyClass, IDENTIFY_TRACK, IDENTIFY_DESC, false);
     }
 }

@@ -9,6 +9,8 @@ public class Configuration {
 
     public String permissionClass;
 
+    public String identifyClass;
+
     public boolean trackActivity;
 
     public String trackTargetFile;
